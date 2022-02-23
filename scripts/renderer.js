@@ -54,13 +54,6 @@ class Renderer {
         let y2 = 500;
 
         this.drawRectangle({ x: x1, y: y1 }, { x: x2, y: y2 }, [150, 150, 0, 255], ctx);
-        // If the show points checkbox is true then draw all the circles showing the locations of all the vertexes.
-        if (this.show_points === true) {
-            this.drawCircle({ x: x1, y: y1 }, 10, [0, 0, 102, 255], ctx);
-            this.drawCircle({ x: x2, y: y2 }, 10, [0, 0, 102, 255], ctx);
-            this.drawCircle({ x: x1, y: y2 }, 10, [0, 0, 102, 255], ctx);
-            this.drawCircle({ x: x2, y: y1 }, 10, [0, 0, 102, 255], ctx);
-        }
     }
 
     // ctx:          canvas context
@@ -70,17 +63,6 @@ class Renderer {
         let radius = 200;
 
         this.drawCircle({ x: centerX, y: centerY }, radius, [75, 0, 150, 255], ctx);
-        // If the show points checkbox is true then draw all the rectangles showing the locations of all the vertexes.
-        if (this.show_points === true) {
-            let point = 0;
-            for (let i = 0; i < this.num_curve_sections; i++) {
-                let x = centerX + radius * Math.cos(point);
-                let y = centerY + radius * Math.sin(point);
-                point = point + (360 / this.num_curve_sections) * Math.PI / 180;
-
-                this.drawRectangle({x: x-5, y: y-5}, {x: x+5, y: y+5}, [0,0,255,255], ctx);
-            }
-        }
     }
 
     // ctx:          canvas context
@@ -100,89 +82,78 @@ class Renderer {
         let pt3Y = 300;
 
         this.drawBezierCurve({ x: pt0X, y: pt0Y }, { x: pt1X, y: pt1Y }, { x: pt2X, y: pt2Y }, { x: pt3X, y: pt3Y }, [255, 0, 0, 255], ctx);
-        // If the show points checkbox is true then draw all the circles showing the locations of all the vertexes
-        if (this.show_points === true) {
-            let t = 0;
-            for (let i = 0; i <= this.num_curve_sections; i++) {
-                // calculate the x and y location of the point to plot of the current t
-                let x = Math.pow((1 - t), 3) * pt0X + 3 * Math.pow((1 - t), 2) * t * pt1X + 3 * (1 - t) * Math.pow(t, 2) * pt2X + Math.pow(t, 3) * pt3X;
-                let y = Math.pow((1 - t), 3) * pt0Y + 3 * Math.pow((1 - t), 2) * t * pt1Y + 3 * (1 - t) * Math.pow(t, 2) * pt2Y + Math.pow(t, 3) * pt3Y;
-                // update t to point to the next vertex to plot
-                t = t + 1.0 / this.num_curve_sections;
-                this.drawCircle({x:x, y:y}, 8, [0,100,0,255], ctx);
-            }
-        }
-
     }
 
     // ctx:          canvas context
     drawSlide3(ctx) {
         // Name using combination of all three above shapes
-        let color = [0,0,150,255];
+        let color = [0, 0, 150, 255];
+
+        // whereever I call drawLine I need to call draw rectangle in order to have the vertex pointers to show
 
         // Letter T
-        this.drawLine({x: 20, y: 410}, {x: 20, y: 380},color, ctx);
-        this.drawLine({x: 20, y: 380}, {x: 80, y: 380},color, ctx);
-        this.drawBezierCurve({x: 80, y: 380}, {x: 80, y: 380}, {x: 100,y: 300}, {x: 80, y: 200},color, ctx);
-        this.drawLine({x: 80, y: 200}, {x: 140, y: 200},color, ctx);
-        this.drawBezierCurve({x: 140, y: 200}, {x: 140, y:200 }, {x: 100,y: 300}, {x:130 , y: 380},color, ctx);
-        this.drawLine({x: 130, y: 380}, {x: 190, y: 380},color, ctx);
-        this.drawLine({x: 190, y: 380}, {x: 190, y: 410},color, ctx);
-        this.drawLine({x: 190, y: 410}, {x: 20, y: 410},color, ctx);
+        this.drawRectangle({ x: 20, y: 410 }, { x: 20, y: 380 }, color, ctx);
+        this.drawRectangle({ x: 20, y: 380 }, { x: 80, y: 380 }, color, ctx);
+        this.drawBezierCurve({ x: 80, y: 380 }, { x: 80, y: 380 }, { x: 100, y: 300 }, { x: 80, y: 200 }, color, ctx);
+        this.drawRectangle({ x: 80, y: 200 }, { x: 140, y: 200 }, color, ctx);
+        this.drawBezierCurve({ x: 140, y: 200 }, { x: 140, y: 200 }, { x: 100, y: 300 }, { x: 130, y: 380 }, color, ctx);
+        this.drawRectangle({ x: 130, y: 380 }, { x: 190, y: 380 }, color, ctx);
+        this.drawRectangle({ x: 190, y: 380 }, { x: 190, y: 410 }, color, ctx);
+        this.drawRectangle({ x: 190, y: 410 }, { x: 20, y: 410 }, color, ctx);
 
         // Letter U
-        this.drawLine({x: 180, y: 340}, {x: 180, y: 240},color, ctx);
-        this.drawBezierCurve({x: 180, y: 240}, {x: 190, y:210 }, {x: 270,y: 210}, {x:280 , y: 240},color, ctx);
-        this.drawLine({x: 280, y: 240}, {x: 280, y: 200}, color, ctx);
-        this.drawLine({x: 280, y: 200}, {x: 300, y: 200}, color, ctx);
-        this.drawLine({x: 300, y: 200}, {x: 300, y: 340}, color, ctx);
-        this.drawLine({x: 300, y: 340}, {x: 280, y: 340}, color, ctx);
-        this.drawBezierCurve({x: 280, y: 340}, {x: 270, y:220 }, {x: 190,y: 220}, {x:200 , y: 340},color, ctx);
-        this.drawLine({x: 200, y: 340}, {x: 180, y: 340}, color, ctx);
+        this.drawRectangle({ x: 180, y: 340 }, { x: 180, y: 240 }, color, ctx);
+        this.drawBezierCurve({ x: 180, y: 240 }, { x: 190, y: 210 }, { x: 270, y: 210 }, { x: 280, y: 240 }, color, ctx);
+        this.drawRectangle({ x: 280, y: 240 }, { x: 280, y: 200 }, color, ctx);
+        this.drawRectangle({ x: 280, y: 200 }, { x: 300, y: 200 }, color, ctx);
+        this.drawRectangle({ x: 300, y: 200 }, { x: 300, y: 340 }, color, ctx);
+        this.drawRectangle({ x: 300, y: 340 }, { x: 280, y: 340 }, color, ctx);
+        this.drawBezierCurve({ x: 280, y: 340 }, { x: 270, y: 220 }, { x: 190, y: 220 }, { x: 200, y: 340 }, color, ctx);
+        this.drawRectangle({ x: 200, y: 340 }, { x: 180, y: 340 }, color, ctx);
 
         // Letter C
-        this.drawBezierCurve({x: 410, y: 340}, {x: 310, y: 330}, {x: 310,y: 210}, {x:410 , y: 200},color, ctx);
-        this.drawBezierCurve({x: 410, y: 200}, {x: 415, y: 199}, {x: 425,y: 199}, {x: 430, y: 200},color, ctx);
-        this.drawLine({x: 430, y: 200}, {x: 425, y: 220}, color, ctx);
-        this.drawBezierCurve({x: 425, y: 220}, {x: 325, y: 220}, {x: 325,y: 330}, {x: 425, y: 320},color, ctx);
-        this.drawLine({x: 425, y: 320}, {x: 420, y: 340}, color, ctx);
-        this.drawLine({x: 420, y: 340}, {x: 410, y: 340}, color, ctx);
+        this.drawBezierCurve({ x: 410, y: 340 }, { x: 310, y: 330 }, { x: 310, y: 210 }, { x: 410, y: 200 }, color, ctx);
+        this.drawBezierCurve({ x: 410, y: 200 }, { x: 415, y: 199 }, { x: 425, y: 199 }, { x: 430, y: 200 }, color, ctx);
+        this.drawRectangle({ x: 430, y: 200 }, { x: 425, y: 220 }, color, ctx);
+        this.drawBezierCurve({ x: 425, y: 220 }, { x: 325, y: 220 }, { x: 325, y: 330 }, { x: 425, y: 320 }, color, ctx);
+        this.drawRectangle({ x: 425, y: 320 }, { x: 420, y: 340 }, color, ctx);
+        this.drawRectangle({ x: 420, y: 340 }, { x: 410, y: 340 }, color, ctx);
 
         // Letter K
-        this.drawLine({x: 460, y: 410}, {x: 460, y: 200}, color, ctx);
-        this.drawLine({x: 460, y: 200}, {x: 480, y: 200}, color, ctx);
-        this.drawBezierCurve({x: 480, y: 200}, {x: 480, y: 340}, {x: 480,y: 340}, {x: 550, y: 200},color, ctx);
-        this.drawLine({x: 550, y: 200}, {x: 570, y: 200}, color, ctx);
-        this.drawBezierCurve({x: 570, y: 200}, {x: 480, y: 330}, {x: 480,y: 330}, {x: 570, y: 410},color, ctx);
-        this.drawLine({x: 570, y: 410}, {x: 550, y: 410}, color, ctx);
-        this.drawBezierCurve({x: 550, y: 410}, {x: 480, y: 330}, {x: 480,y: 330}, {x: 480, y: 410},color, ctx);
-        this.drawLine({x: 480, y: 410}, {x: 460, y: 410}, color, ctx);
+        this.drawRectangle({ x: 460, y: 410 }, { x: 460, y: 200 }, color, ctx);
+        this.drawRectangle({ x: 460, y: 200 }, { x: 480, y: 200 }, color, ctx);
+        this.drawBezierCurve({ x: 480, y: 200 }, { x: 480, y: 340 }, { x: 480, y: 340 }, { x: 550, y: 200 }, color, ctx);
+        this.drawRectangle({ x: 550, y: 200 }, { x: 570, y: 200 }, color, ctx);
+        this.drawBezierCurve({ x: 570, y: 200 }, { x: 480, y: 330 }, { x: 480, y: 330 }, { x: 570, y: 410 }, color, ctx);
+        this.drawRectangle({ x: 570, y: 410 }, { x: 550, y: 410 }, color, ctx);
+        this.drawBezierCurve({ x: 550, y: 410 }, { x: 480, y: 330 }, { x: 480, y: 330 }, { x: 480, y: 410 }, color, ctx);
+        this.drawRectangle({ x: 480, y: 410 }, { x: 460, y: 410 }, color, ctx);
 
         // Letter E
         //Plan use circle and then use arch to erase part of it
-        this.drawBezierCurve({x: 670, y: 275}, {x: 650, y: 330}, {x: 600,y: 330}, {x: 580, y: 280},color, ctx);
-        this.drawBezierCurve({x: 580, y: 280}, {x: 570, y: 160}, {x: 670,y: 210}, {x: 670, y: 230},color, ctx);
-        this.drawLine({x: 670, y: 230}, {x: 655, y: 240}, color, ctx);
-        this.drawBezierCurve({x: 655, y: 240}, {x: 655, y: 230}, {x: 590,y: 180}, {x: 600, y: 275},color, ctx);
-        this.drawLine({x: 600, y: 285}, {x: 650, y: 285}, color, ctx);
-        this.drawBezierCurve({x: 600, y: 285}, {x: 620, y: 310}, {x: 630,y: 310}, {x: 650, y: 285},color, ctx);
-        this.drawLine({x: 600, y: 275}, {x: 670, y: 275}, color, ctx);
+        this.drawBezierCurve({ x: 670, y: 275 }, { x: 650, y: 330 }, { x: 600, y: 330 }, { x: 580, y: 280 }, color, ctx);
+        this.drawBezierCurve({ x: 580, y: 280 }, { x: 570, y: 160 }, { x: 670, y: 210 }, { x: 670, y: 230 }, color, ctx);
+        this.drawRectangle({ x: 670, y: 230 }, { x: 655, y: 240 }, color, ctx);
+        this.drawBezierCurve({ x: 655, y: 240 }, { x: 655, y: 230 }, { x: 590, y: 180 }, { x: 600, y: 275 }, color, ctx);
+        this.drawRectangle({ x: 600, y: 285 }, { x: 650, y: 285 }, color, ctx);
+        this.drawBezierCurve({ x: 600, y: 285 }, { x: 620, y: 310 }, { x: 630, y: 310 }, { x: 650, y: 285 }, color, ctx);
+        this.drawRectangle({ x: 600, y: 275 }, { x: 670, y: 275 }, color, ctx);
 
         // Letter R
-        this.drawLine({x: 700, y: 200}, {x: 700, y: 320}, color, ctx);
-        this.drawLine({x: 700, y: 320}, {x: 720, y: 320}, color, ctx);
-        this.drawLine({x: 720, y: 320}, {x: 720, y: 300}, color, ctx);
-        this.drawBezierCurve({x: 720, y: 300}, {x: 730, y: 330}, {x: 770,y: 290}, {x: 780, y: 270},color, ctx);
-        this.drawLine({x: 780, y: 270}, {x: 760, y: 260}, color, ctx);
-        this.drawBezierCurve({x: 760, y: 260}, {x: 770, y: 290}, {x: 720,y: 290}, {x: 720, y: 270},color, ctx);
-        this.drawLine({x: 720, y: 270}, {x: 720, y: 200}, color, ctx);
-        this.drawLine({x: 720, y: 200}, {x: 700, y: 200}, color, ctx);
+        this.drawRectangle({ x: 700, y: 200 }, { x: 700, y: 320 }, color, ctx);
+        this.drawRectangle({ x: 700, y: 320 }, { x: 720, y: 320 }, color, ctx);
+        this.drawRectangle({ x: 720, y: 320 }, { x: 720, y: 300 }, color, ctx);
+        this.drawBezierCurve({ x: 720, y: 300 }, { x: 730, y: 330 }, { x: 770, y: 290 }, { x: 780, y: 270 }, color, ctx);
+        this.drawRectangle({ x: 780, y: 270 }, { x: 760, y: 260 }, color, ctx);
+        this.drawBezierCurve({ x: 760, y: 260 }, { x: 770, y: 290 }, { x: 720, y: 290 }, { x: 720, y: 270 }, color, ctx);
+        this.drawRectangle({ x: 720, y: 270 }, { x: 720, y: 200 }, color, ctx);
+        this.drawRectangle({ x: 720, y: 200 }, { x: 700, y: 200 }, color, ctx);
 
         // Happy Face
-        this.drawCircle({x: 400,y: 500}, 80, color, ctx);
-        this.drawCircle({x: 420,y: 520}, 10, color, ctx);
-        this.drawCircle({x: 380,y: 520}, 10, color, ctx);
-        this.drawBezierCurve({x: 340, y: 510}, {x: 360, y: 450}, {x: 430,y: 450}, {x: 460, y: 510},color, ctx);
+        this.drawCircle({ x: 400, y: 500 }, 80, color, ctx);
+        this.drawCircle({ x: 420, y: 520 }, 10, color, ctx);
+        this.drawCircle({ x: 380, y: 520 }, 10, color, ctx);
+        this.drawBezierCurve({ x: 340, y: 510 }, { x: 360, y: 450 }, { x: 430, y: 450 }, { x: 460, y: 510 }, color, ctx);
 
 
     }
@@ -197,10 +168,15 @@ class Renderer {
         this.drawLine({ x: right_top.x, y: left_bottom.y }, right_top, color, ctx);
         this.drawLine(right_top, { x: left_bottom.x, y: right_top.y }, color, ctx);
         this.drawLine({ x: left_bottom.x, y: right_top.y }, left_bottom, color, ctx);
-
-        //To get the points to show up need to create a conditional that if true when the box
-        // is checked that it will draw all the points defined within the draw(???) function
-        // when there is a loop involved all I need to do is insert the conditional within the loop
+        // If the show points checkbox is true then draw all the circles showing the locations of all the vertexes.
+        if (this.show_points === true) {
+            this.show_points = false;
+            this.drawCircle({ x: left_bottom.x, y: left_bottom.y }, 10, [255, 0, 0, 255], ctx);
+            this.drawCircle({ x: right_top.x, y: right_top.y }, 10, [255, 0, 0, 255], ctx);
+            this.drawCircle({ x: left_bottom.x, y: right_top.y }, 10, [255, 0, 0, 255], ctx);
+            this.drawCircle({ x: right_top.x, y: left_bottom.y }, 10, [255, 0, 0, 255], ctx);
+            this.show_points = true;
+        }
     }
 
     // center:       object ({x: __, y: __})
@@ -223,6 +199,20 @@ class Renderer {
             // Draw the line to connect the two found points.
             this.drawLine({ x: x, y: y }, { x: x1, y: y1 }, color, ctx);
         }
+
+        // If the show points checkbox is true then draw all the rectangles showing the locations of all the vertexes.
+        if (this.show_points === true) {
+            this.show_points = false;
+            let point = 0;
+            for (let i = 0; i < this.num_curve_sections; i++) {
+                let x = center.x + radius * Math.cos(point);
+                let y = center.y + radius * Math.sin(point);
+                point = point + (360 / this.num_curve_sections) * Math.PI / 180;
+
+                this.drawRectangle({ x: x - 5, y: y - 5 }, { x: x + 5, y: y + 5 }, [0, 0, 255, 255], ctx);
+            }
+            this.show_points = true;
+        }
     }
 
     // pt0:          object ({x: __, y: __})
@@ -244,6 +234,21 @@ class Renderer {
             let y1 = Math.pow((1 - t), 3) * pt0.y + 3 * Math.pow((1 - t), 2) * t * pt1.y + 3 * (1 - t) * Math.pow(t, 2) * pt2.y + Math.pow(t, 3) * pt3.y;
             // Draw the line connecting the two found points. 
             this.drawLine({ x: x, y: y }, { x: x1, y: y1 }, color, ctx);
+        }
+
+        // If the show points checkbox is true then draw all the circles showing the locations of all the vertexes
+        if (this.show_points === true) {
+            this.show_points = false;
+            let t = 0;
+            for (let i = 0; i <= this.num_curve_sections; i++) {
+                // calculate the x and y location of the point to plot of the current t
+                let x = Math.pow((1 - t), 3) * pt0.x + 3 * Math.pow((1 - t), 2) * t * pt1.x + 3 * (1 - t) * Math.pow(t, 2) * pt2.x + Math.pow(t, 3) * pt3.x;
+                let y = Math.pow((1 - t), 3) * pt0.y + 3 * Math.pow((1 - t), 2) * t * pt1.y + 3 * (1 - t) * Math.pow(t, 2) * pt2.y + Math.pow(t, 3) * pt3.y;
+                // update t to point to the next vertex to plot
+                t = t + 1.0 / this.num_curve_sections;
+                this.drawCircle({ x: x, y: y }, 8, [0, 100, 0, 255], ctx);
+            }
+            this.show_points = true;
         }
     }
 
